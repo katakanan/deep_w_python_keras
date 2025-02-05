@@ -1,8 +1,12 @@
 import os
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 import tensorflow as tf
-
+print(tf.__version__)
+print(tf.keras.__version__)
+# from tensorflow.keras import optimizers
 import math
+
+learning_rate = 1e-3
 
 class NaiveDense:
     def __init__(self, input_size, output_size, activation):
@@ -53,6 +57,30 @@ class BatchGenerator:
         labels = self.labels[self.index : self.index + self.batch_size]
         self.index += self.batch_size
         return images, labels
+
+def upgrade_weights(gradients, weights):
+    for g, w in zip(gradients, weights):
+        w.assign_sub(g * learning_rate)
+
+def one_training_step(model, images_batch, labels_batch):
+    with tf.GradientTape() as tape:
+        predictions = model(images_batch)
+        per_sample_losses = tf.keras.losses.sparse_categorical_crossentropy(labels_batch, predictions)
+        average_loss = tf.reduce_mean(per_sample_losses)
+
+    gradients = tape.gradient(average_loss, model.weights)
+    upgrade_weights(gradients, model.weights)
+    return average_loss
+
+def fit(model, images, labels, epochs, batch_size=128):
+    for epoch_counter in range(epochs):
+        print(f"Epoch {epoch_counter}")
+        batch_generator = BatchGenerator(images, labels)
+        for batch_counter in range(batch_generator.num_batches):
+            images_batch, labels_batch = batch_generator.next()
+            loss = one_training_step(model, images_batch, labels_batch)
+            if batch_counter % 100 == 0:
+                print(f"loss at batch {batch_counter} : {loss:.2f}")
 
 if __name__ == "__main__":
     print("hello")
