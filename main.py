@@ -17,6 +17,23 @@ class NaiveDense:
     @property
     def weight(self):
         return [self.W, self.b]
+    
+class NaiveSequential:
+    def __init__(self, layers):
+        self.layers = layers
+
+    def __call__(self, inputs):
+        x = inputs
+        for layer in self.layers:
+            x = layer(x)
+        return x
+    
+    @property
+    def weights(self):
+        weights = []
+        for layer in self.layers:
+            weights += layer.weights
+        return weights
 
 if __name__ == "__main__":
     print("hello")
