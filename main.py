@@ -1,3 +1,5 @@
+import os
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 import tensorflow as tf
 
 class NaiveDense:
@@ -15,7 +17,7 @@ class NaiveDense:
         return self.activation(tf.matmul(inputs, self.W) + self.b)
     
     @property
-    def weight(self):
+    def weights(self):
         return [self.W, self.b]
     
 class NaiveSequential:
@@ -37,3 +39,8 @@ class NaiveSequential:
 
 if __name__ == "__main__":
     print("hello")
+    model = NaiveSequential([
+        NaiveDense(input_size=28*28, output_size=512, activation=tf.nn.relu),
+        NaiveDense(input_size=512, output_size=10, activation=tf.nn.softmax)
+    ])
+    assert len(model.weights) == 4
