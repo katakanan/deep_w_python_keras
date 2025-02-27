@@ -16,7 +16,7 @@ if __name__ == "__main__":
     x = layers.MaxPooling2D(pool_size=2)(x)
     x = layers.Conv2D(filters=256, kernel_size=3, activation="relu")(x)
     x = layers.Flatten()(x)
-    outputs = layers.Dense(10, activation="sigmoid")(x)
+    outputs = layers.Dense(1, activation="sigmoid")(x)
     model = keras.Model(inputs=inputs, outputs=outputs)
 
     model.summary()
