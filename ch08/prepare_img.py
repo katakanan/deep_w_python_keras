@@ -17,7 +17,7 @@ def make_subset(subset_name, start_index, end_index):
                 print(f"Copy {fnames_dst[i-1]} to {fnames_dst[i]}")
                 shutil.copyfile(src=dir / fnames_dst[i-1], dst=dir / fname_dst)
 
-# make_subset("train", start_index=0, end_index=1000)
-# make_subset("validation", start_index=1000, end_index=1500)
+make_subset("train", start_index=0, end_index=1000)
+make_subset("validation", start_index=1000, end_index=1500)
 # make_subset("test", start_index=1500, end_index=2500) #dog2317 is 16bit #cat2494 is wrong
 make_subset("test", start_index=2500, end_index=3500) #dog2317 is 16bit #cat2494 is wrong
